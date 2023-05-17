@@ -1,9 +1,9 @@
 # inbreeding-python
-Inbreeding Coefficient Calculator For Pedigrees
+Inbreeding Coefficient Calculator for Pedigrees in Python
 
 ## How to use
 
-### 1. Create a python dictionary containing the pedigree.
+### 1. Create a python dictionary containing a pedigree.
 ```python
 # Pedigree example with 0.25 inbreeding coefficient (25%)
 pedigree = {
@@ -28,7 +28,7 @@ All animals in pedigree must have a unique id. If the sire/dam of an animal is u
 
 ***
 
-### 2. Create an instance of the `InbreedingCalculator` class and load pedigree.
+### 2. Create an instance of the `InbreedingCalculator` class and load the pedigree.
 ```python
 calculator = InbreedingCalculator(pedigree)
 ```
@@ -40,7 +40,8 @@ calculator.pedigree = pedigree
 
 ***
 
-### 3. If you used keys other than sire, dam & id ensure you configure your InbreedingCalculator for them.
+### 3. Configure Calculator 
+If you used keys other than `sire`, `dam` & `id` ensure you configure your `InbreedingCalculator` object for them.
 ```python
 pedigree = {
 "Father": None,
