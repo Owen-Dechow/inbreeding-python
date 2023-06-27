@@ -31,10 +31,10 @@ class InbreedingCalculator:
         return inbreeding
 
     def _map_parents(self, p, dic, depth, sex) -> dict:
-        if p[self.id_key] + sex in dic:
-            dic[p[self.id_key] + sex].append(depth)
+        if f"{p[self.id_key]}{sex}" in dic:
+            dic[f"{p[self.id_key]}{sex}"].append(depth)
         else:
-            dic[p[self.id_key] + sex] = [depth]
+            dic[f"{p[self.id_key]}{sex}"] = [depth]
 
         if self.sire_key in p and p[self.sire_key]:
             dic = self._map_parents(p[self.sire_key], dic, depth + 1, "Y")
