@@ -17,9 +17,11 @@ class InbreedingCalculator:
         p = self.pedigree
 
         if self.sire_key in p and p[self.sire_key]:
-            paternal = self._map_parents(p[self.sire_key], {}, 0, "Y")
+            paternal = {}
+            self._map_parents(p[self.sire_key], paternal, 0, "Y")
         if self.dam_key in p and p[self.dam_key]:
-            maternal = self._map_parents(p[self.dam_key], {}, 0, "X")
+            maternal = {}
+            self._map_parents(p[self.dam_key], maternal, 0, "X")
 
         inbreeding = 0
         for animal_paternal, depths_paternal in paternal.items():
@@ -37,9 +39,7 @@ class InbreedingCalculator:
             dic[f"{p[self.id_key]}{sex}"] = [depth]
 
         if self.sire_key in p and p[self.sire_key]:
-            dic = self._map_parents(p[self.sire_key], dic, depth + 1, "Y")
+            self._map_parents(p[self.sire_key], dic, depth + 1, "Y")
 
-        if self.sire_key in p and p[self.dam_key]:
-            dic = self._map_parents(p[self.dam_key], dic, depth + 1, "X")
-
-        return dic
+        if self.dam_key in p and p[self.dam_key]:
+            self._map_parents(p[self.dam_key], dic, depth + 1, "X")
