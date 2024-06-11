@@ -28,7 +28,8 @@ class InbreedingCalculator:
             if animal_paternal in maternal:
                 for depth_maternal in maternal[animal_paternal]:
                     for depth_paternal in depths_paternal:
-                        inbreeding += 0.5 ** (depth_paternal + depth_maternal + 1)
+                        percentage = 0.5 ** (depth_paternal + depth_maternal + 1)
+                        inbreeding += percentage
 
         return inbreeding
 
