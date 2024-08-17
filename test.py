@@ -38,7 +38,7 @@ def _test(shuffle=False, quick_fail=False, info=False):
     # Print tests results
     if failed:
         print(
-            f"TEST FAILED [failed={len(failed)}, passed={len(passed)}]"
+            f"TEST FAILED [failed={len(failed)} passed={len(passed)}]"
         )
     else:
         print("ALL TESTS PASSED")
