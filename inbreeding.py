@@ -17,8 +17,17 @@ class InbreedingCalculator:
         paternal = []
         maternal = []
 
-        self._map_pedigree(self.pedigree[self.sire_key], [], paternal)
-        self._map_pedigree(self.pedigree[self.dam_key], [], maternal)
+        if self.sire_key in self.pedigree and self.pedigree[self.sire_key]:
+            self._map_pedigree(self.pedigree[self.sire_key], [], paternal)
+
+        if self.dam_key in self.pedigree and self.pedigree[self.dam_key]:
+            self._map_pedigree(self.pedigree[self.dam_key], [], maternal)
+
+        # with open("out.txt", "w") as f:
+        #     f.write(f"{"-"*20} SIRE SIDE {"-"*20}\n")
+        #     f.write("\n".join([str(x) for x in paternal]))
+        #     f.write(f"\n\n{"-"*20} DAM SIDE {"-"*20}\n")
+        #     f.write("\n".join([str(x) for x in maternal]))
 
         return self._calculate_from_maps(maternal, paternal)
 
