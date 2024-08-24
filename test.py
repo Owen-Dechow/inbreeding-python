@@ -4,7 +4,20 @@ from random import shuffle as random_shuffle
 from sys import argv
 from time import time
 
-def _test(shuffle=False, quick_fail=False, info=False):
+class Logger:
+    def __init__(self):
+        self.string = ""
+    
+    def append(self, object, end="\n"):
+        self.string += f"{object}" + end
+    
+    def log(self):
+        print(self.string)
+        self.string = ""
+
+def _test(shuffle=False, quick_fail=False, info=False, iterations=1):
+    log = Logger()
+
     # Get pedigrees
     pedigrees = json_load(open("test_data.json"))
     if shuffle:
@@ -16,7 +29,7 @@ def _test(shuffle=False, quick_fail=False, info=False):
     start_time = time()
 
     # Open tests meter
-    print("[", end="")
+    log.append("[", end="")
     for idx, (pedigree, correct, _name) in enumerate(pedigrees):
         calculator = InbreedingCalculator(
             pedigree, sire_key="s", dam_key="d", id_key="name"
@@ -24,39 +37,41 @@ def _test(shuffle=False, quick_fail=False, info=False):
         tested = calculator.get_coefficient()
 
         if tested == correct:
-            print(".", end="")
+            log.append(".", end="")
             passed[idx] = tested
         else:
-            print("F", end="")
+            log.append("F", end="")
             failed[idx] = tested
             if quick_fail:
                 break
     
     # Close tests meter
-    print(f"] x{len(failed) + len(passed)}{f"/{len(pedigrees)}" if quick_fail else ""}")
+    log.append(f"] x{len(failed) + len(passed)}{f"/{len(pedigrees)}" if quick_fail else ""}")
 
     # Print tests results
     if failed:
-        print(
+        log.append(
             f"TEST FAILED [failed={len(failed)} passed={len(passed)}]"
         )
     else:
-        print("ALL TESTS PASSED")
+        log.append("ALL TESTS PASSED")
     
     # Print test time
-    print(f"Time: {time() - start_time}")
+    log.append(f"Time: {time() - start_time}")
 
     # Print info
     if info:
-        print("\nPassed:")
+        log.append("\nPassed:")
         for idx in passed:
             pedigree = pedigrees[idx]
-            print(f"\t{pedigree[2]}")
+            log.append(f"\t{pedigree[2]}")
 
-        print("Failed:")
+        log.append("Failed:")
         for idx, tested in failed.items():
             pedigree = pedigrees[idx]
-            print(f"\t{pedigree[2]} [tested={tested} correct={pedigree[1]}]")
+            log.append(f"\t{pedigree[2]} [tested={tested} correct={pedigree[1]}]")
+
+    log.log()
 
 def test(**kwargs):
     print()

@@ -10,29 +10,40 @@ class InbreedingCalculator:
         self.sire_key = sire_key
         self.dam_key = dam_key
         self.id_key = id_key
+        self._catch = {}
 
     def get_coefficient(self) -> float:
         """Get the inbreeding coefficient of the loaded pedigree"""
+        return self._get_coefficient_of_pedigree(self.pedigree)
+
+    def _get_coefficient_of_pedigree(self, pedigree) -> float:
+        if pedigree[self.id_key] in self._catch:
+            return self._catch[pedigree[self.id_key]]
+
+        SK = self.sire_key
+        DK = self.dam_key
 
         paternal = []
         maternal = []
 
-        if self.sire_key in self.pedigree and self.pedigree[self.sire_key]:
-            self._map_pedigree(self.pedigree[self.sire_key], [], paternal)
+        if SK in pedigree and pedigree[SK]:
+            self._map_pedigree(pedigree[SK], [], paternal)
 
-        if self.dam_key in self.pedigree and self.pedigree[self.dam_key]:
-            self._map_pedigree(self.pedigree[self.dam_key], [], maternal)
+        if DK in pedigree and pedigree[DK]:
+            self._map_pedigree(pedigree[DK], [], maternal)
 
-        # with open("out.txt", "w") as f:
-        #     f.write(f"{"-"*20} SIRE SIDE {"-"*20}\n")
-        #     f.write("\n".join([str(x) for x in paternal]))
-        #     f.write(f"\n\n{"-"*20} DAM SIDE {"-"*20}\n")
-        #     f.write("\n".join([str(x) for x in maternal]))
-
-        return self._calculate_from_maps(maternal, paternal)
+        coefficient = self._calculate_from_maps(maternal, paternal)
+        self._catch[pedigree[self.id_key]] = coefficient
+        return coefficient
 
     def _map_pedigree(self, pedigree, layers, result):
-        layers = [pedigree[self.id_key]] + layers
+        this_co = self._get_coefficient_of_pedigree(pedigree)
+        layers = [
+            (
+                pedigree[self.id_key],
+                this_co,
+            )
+        ] + layers
         result.append(layers)
 
         if self.sire_key in pedigree and pedigree[self.sire_key]:
@@ -41,22 +52,23 @@ class InbreedingCalculator:
         if self.dam_key in pedigree and pedigree[self.dam_key]:
             self._map_pedigree(pedigree[self.dam_key], layers, result)
 
-    def _calculate_from_maps(self, maternal, paternal):
+    def _calculate_from_maps(self, maternal_maps, paternal_maps):
         result = 0
-        for m in maternal:
-            m0 = m[0]
 
-            for p in paternal:
-                p0 = p[0]
+        for maternal_animal_map in maternal_maps:
+            isolated_maternal_animal = maternal_animal_map[0]
 
-                if m0 == p0:
-                    check = True
-                    for e in m:
-                        if e in p and e != m0:
-                            check = False
+            for paternal_animal_map in paternal_maps:
+                isolated_paternal_animal = paternal_animal_map[0]
 
-                    if check:
-                        inb = 0.5 ** (len(m) + len(p) - 1)
-                        result += inb
+                if isolated_maternal_animal[0] == isolated_paternal_animal[0]:
+                    joined = maternal_animal_map + paternal_animal_map
+                    loop_len = len(joined) - 1
+                    if len(set(joined)) == loop_len:
+                        inbreeding = 0.5**loop_len
+                        parental_inbreeding = (
+                            isolated_paternal_animal[1] + isolated_maternal_animal[1]
+                        ) / 2
+                        result += inbreeding * (1 + parental_inbreeding)
 
         return result
