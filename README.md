@@ -27,7 +27,7 @@ Inbreeding Coefficient Calculator for Pedigrees in Python
     All animals in pedigree must have a unique id. If the sire/dam of an animal is unknown the value can be set to `None` or the key can be omitted all together.
 
 
-1. Create an instance of the `InbreedingCalculator` class and load the pedigree.
+2. Create an instance of the `InbreedingCalculator` class and load the pedigree.
     ```python
     calculator = InbreedingCalculator(pedigree)
     ```
@@ -38,7 +38,7 @@ Inbreeding Coefficient Calculator for Pedigrees in Python
     ```
 
 
-1. Configure Calculator
+3. Configure Calculator
    
     If you used keys other than `sire`, `dam` & `id` ensure you configure your `InbreedingCalculator` object for them.
     ```python
@@ -59,7 +59,7 @@ Inbreeding Coefficient Calculator for Pedigrees in Python
     ```
 
     
-5. Use the `get_coefficient` method to find the inbreeding percentage
+4. Use the `get_coefficient` method to find the inbreeding percentage
     ```python
     pedigree = {
         "sire": {
