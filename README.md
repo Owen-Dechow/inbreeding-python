@@ -85,10 +85,11 @@ Inbreeding Coefficient Calculator for Pedigrees in Python
     ```
     
     Output
-    ```
+    ```sh
     Inbreeding Coefficient: 0.25 (25.0%)
     ````
 
 **If you use this code please give proper credit.**
-<br>
+
+
 **Thank you, [Owen Dechow](https://github.com/Owen-Dechow)!**
